@@ -469,6 +469,8 @@ class Jetpack_Photon {
 					);
 				}
 
+				list( $image_args['width'], $image_args['height'] ) = image_constrain_size_for_editor( $image_args['width'], $image_args['height'], $size );
+
 				// Expose determined arguments to a filter before passing to Photon
 				$transform = $image_args['crop'] ? 'resize' : 'fit';
 
@@ -491,6 +493,7 @@ class Jetpack_Photon {
 					}
 
 				}
+
 
 				/**
 				 * Filter the Photon Arguments added to an image when going through Photon, when that image size is a string.
@@ -528,6 +531,8 @@ class Jetpack_Photon {
 				// Don't bother if necessary parameters aren't passed.
 				if ( ! $width || ! $height )
 					return $image;
+
+				list( $width, $height ) = image_constrain_size_for_editor( $width, $height, $size );
 
 				// Expose arguments to a filter before passing to Photon
 				$photon_args = array(
