@@ -529,8 +529,9 @@ class Jetpack_Photon {
 				$height = isset( $size[1] ) ? (int) $size[1] : false;
 
 				// Don't bother if necessary parameters aren't passed.
-				if ( ! $width || ! $height )
+				if ( ! $width || ! $height ) {
 					return $image;
+				}
 
 				list( $width, $height ) = image_constrain_size_for_editor( $width, $height, $size );
 
