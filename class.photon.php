@@ -454,19 +454,21 @@ class Jetpack_Photon {
 
 				$photon_args = array();
 
+				// If there is not an intermediate size for the image, we need to use the `fit` transform method.
+				// If there is an intermediate size, then the crop has already been established.
+				if ( ! $image_meta = image_get_intermediate_size( $attachment_id, $size ) ) {
+					$image_args['crop'] = false;
+				}
+
 				// `full` is a special case in WP
-				// To ensure filter receives consistent data regardless of requested size, `$image_args` is overridden with dimensions of original image.
-				if ( 'full' == $size || ! $image_meta = image_get_intermediate_size( $attachment_id, $size ) ) {
+				// To ensure filter receives consistent data regardless of requested size, `$image_args` is overridden with dimensions of original image, if needed.
+				if ( 'full' == $size || ! $image_meta ) {
 					$image_meta = wp_get_attachment_metadata( $attachment_id );
 				}
 
 				if ( isset( $image_meta['width'], $image_meta['height'] ) ) {
-					// 'crop' is true so Photon's `resize` method is used
-					$image_args = array(
-						'width'  => $image_meta['width'],
-						'height' => $image_meta['height'],
-						'crop'   => true
-					);
+					$image_args['width']  = $image_meta['width'];
+					$image_args['height'] = $image_meta['height'];
 				}
 
 				list( $image_args['width'], $image_args['height'] ) = image_constrain_size_for_editor( $image_args['width'], $image_args['height'], $size );
